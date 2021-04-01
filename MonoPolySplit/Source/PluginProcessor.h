@@ -9,7 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-
+#include "SigTypeAnalysis.h"
 //==============================================================================
 /**
 */
@@ -53,7 +53,12 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    float arrowX = 200;
+    float arrowY = 70;
 private:
+    
+    int count = 0;
+    SigTypeAnalysis *sta;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoPolySplitAudioProcessor)
 };

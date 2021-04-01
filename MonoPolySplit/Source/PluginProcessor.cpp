@@ -8,11 +8,14 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "SigTypeAnalysis.h"
+
+
 
 //==============================================================================
-MonoPolySplitAudioProcessor::MonoPolySplitAudioProcessor()
+MonoPolySplitAudioProcessor::MonoPolySplitAudioProcessor() :
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
+      AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
@@ -22,6 +25,7 @@ MonoPolySplitAudioProcessor::MonoPolySplitAudioProcessor()
                        )
 #endif
 {
+    sta = new SigTypeAnalysis;
 }
 
 MonoPolySplitAudioProcessor::~MonoPolySplitAudioProcessor()
@@ -152,9 +156,35 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
     // interleaved by keeping the same state.
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+        
+        
+        for (int n = 0; n < buffer.getNumSamples(); ++n)
+        {
+            
+        
+        if(count<16385)
+            sta->bufferPopulate(buffer.getReadPointer(channel)[n], channel);
 
         // ..do something to the data...
+            
+        else{
+            count = 0;
+            bool state = sta->checkSigType(channel);
+                 
+            if(state == true){
+                arrowX = 100;
+                arrowY = 95;}
+                
+            else{
+                arrowX = 300;
+                arrowY = 95;}
+                
+                
+            }
+            
+         count++;
+        buffer.getWritePointer(channel)[n]= buffer.getReadPointer(channel)[n];
+        }
     }
 }
 
@@ -182,6 +212,8 @@ void MonoPolySplitAudioProcessor::setStateInformation (const void* data, int siz
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
 }
+
+
 
 //==============================================================================
 // This creates new instances of the plugin..
