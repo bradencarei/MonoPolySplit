@@ -4,6 +4,8 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="gdIW4y" name="MonoPolySplit">
     <GROUP id="{12546D8F-9F2C-26B3-6489-F2F7C7253759}" name="Source">
+      <FILE id="g0TFaM" name="Knob.cpp" compile="1" resource="0" file="Source/Knob.cpp"/>
+      <FILE id="dstBLH" name="Knob.h" compile="0" resource="0" file="Source/Knob.h"/>
       <FILE id="lH2x9R" name="Distortion.cpp" compile="1" resource="0" file="Source/Distortion.cpp"/>
       <FILE id="gkjrFG" name="Distortion.h" compile="0" resource="0" file="Source/Distortion.h"/>
       <FILE id="VoAq0v" name="SigTypeAnalysis.cpp" compile="1" resource="0"
@@ -17,6 +19,9 @@
       <FILE id="ZsV6sK" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="f3IFvZ" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+    <GROUP id="{8A7D8883-E43E-45A6-CEF2-DCE281CFA1F1}" name="BinaryData">
+      <FILE id="nK7q0t" name="Knob.png" compile="0" resource="1" file="../../Documents/Knob.png"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

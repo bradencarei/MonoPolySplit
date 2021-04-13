@@ -3,12 +3,12 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class LargeKnob : public LookAndFeel_V3
+class LargeKnob : public juce::LookAndFeel_V3
 {
 public:
-    Image sprite = ImageCache::getFromMemory(BinaryData::knob_large_png, BinaryData::knob_large_pngSize);
+    juce::Image sprite = juce::ImageCache::getFromMemory(<#const void *imageData#>, <#int dataSize#>);
     
-    void drawRotarySlider (Graphics& g, int x, int y, int width, int height, float sliderPos, const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider);
+    void drawRotarySlider (juce::Graphics& g, int x, int y, int width, int height, float sliderPos, const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider& slider);
 };
 
 #endif /* LARGEKNOB_H_INCLUDED */

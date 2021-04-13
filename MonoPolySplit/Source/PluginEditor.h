@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "Knob.h"
 
 //==============================================================================
 /**
@@ -39,6 +40,10 @@ private:
     juce::Slider releaseKnob;
     
     void sliderValueChanged(juce::Slider* slider) override;
+    
+    Knob Knob;
+        
+    //juce::LookAndFeel_V3 lookAndFeel3;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoPolySplitAudioProcessorEditor)
 };

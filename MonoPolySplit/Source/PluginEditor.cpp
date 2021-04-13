@@ -35,6 +35,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     gainMono.setRange(0.0, 1.0,0.01f);
     gainMono.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
     addAndMakeVisible(gainMono);
+    gainMono.setLookAndFeel(&Knob);
     
     gainPoly.addListener(this);
     gainPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
