@@ -15,14 +15,20 @@
 //==============================================================================
 /*
 */
-class Distortion  : public juce::Component
-{
+class Distortion {
+  
 public:
-    Distortion();
-    ~Distortion() override;
-
-
+    float processSample(float x);
+    
+    void setDrive(float newDrive);
+    
+    void setFs(float newFs);
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Distortion)
+    float smoothDrive = 1.f;
+    float drive = 1.f;
+    float Fs = 48000.f;
+    float smoothTime = 0.01;
+    float alpha = exp(-log(9)/(Fs*smoothTime));
+    
 };

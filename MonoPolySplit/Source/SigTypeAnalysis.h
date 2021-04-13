@@ -24,7 +24,7 @@ public:
     void bufferPopulate(float sample, int channel);
     bool checkSigType(int channel);
 
-    static constexpr auto fftOrder = 12;                // [1]
+    static constexpr auto fftOrder = 13;                // [1]
     static constexpr auto fftSize  = 1 << fftOrder;     // [2]
     
     void pushNextSampleIntoFifo (float sample) noexcept;
@@ -34,7 +34,7 @@ public:
     void setThresh(float thresh);
     float getThresh();
     int getBufferSize();
-    int bufferSize = fftSize;
+    int bufferSiz = fftSize;
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SigTypeAnalysis)
     \

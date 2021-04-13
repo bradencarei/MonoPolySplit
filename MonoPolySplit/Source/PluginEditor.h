@@ -35,6 +35,8 @@ private:
     juce::Slider gainPoly;
     juce::Slider distMono;
     juce::Slider distPoly;
+    juce::Slider attackKnob;
+    juce::Slider releaseKnob;
     
     void sliderValueChanged(juce::Slider* slider) override;
     

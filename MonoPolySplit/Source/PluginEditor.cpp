@@ -9,6 +9,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "SigTypeAnalysis.h"
+#include <math.h>
 
 //==============================================================================
 MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySplitAudioProcessor& p)
@@ -47,7 +48,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     distMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     distMono.setBounds(25, 125, 75, 75);
     distMono.setValue(audioProcessor.monoDist);
-    distMono.setRange(0.0, 1.0,0.01f);
+    distMono.setRange(1.f, 10.f,0.01f);
     distMono.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
     addAndMakeVisible(distMono);
     
@@ -55,9 +56,25 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     distPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     distPoly.setBounds(500, 125, 75, 75);
     distPoly.setValue(audioProcessor.polyDist);
-    distPoly.setRange(0.0, 1.0,0.01f);
+    distPoly.setRange(1.f, 10.f,0.01f);
     distPoly.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
     addAndMakeVisible(distPoly);
+    
+    attackKnob.addListener(this);
+    attackKnob.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    attackKnob.setBounds(125, 250, 75, 75);
+    attackKnob.setValue(audioProcessor.attackMS);
+    attackKnob.setRange(0.f, 100.f, 1);
+    attackKnob.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
+    addAndMakeVisible(attackKnob);
+    
+    releaseKnob.addListener(this);
+    releaseKnob.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    releaseKnob.setBounds(400, 250, 75, 75);
+    releaseKnob.setValue(audioProcessor.releaseMS);
+    releaseKnob.setRange(0.f, 2000.f, 1);
+    releaseKnob.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
+    addAndMakeVisible(releaseKnob);
     
 }
 
@@ -141,5 +158,14 @@ void MonoPolySplitAudioProcessorEditor::sliderValueChanged(juce::Slider * slider
     
     if (slider == &gainPoly){
         audioProcessor.polyDist = distPoly.getValue();
+    }
+    
+    if (slider == &attackKnob){
+        audioProcessor.attackMS = attackKnob.getValue();
+    }
+    
+    if (slider == &releaseKnob){
+        audioProcessor.releaseMS = releaseKnob.getValue();
+        audioProcessor.releaseDec = floor((audioProcessor.releaseMS/1000)*audioProcessor.Fs);
     }
 }

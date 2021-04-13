@@ -9,6 +9,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "SigTypeAnalysis.h"
+#include <math.h>
 
 
 
@@ -100,6 +101,7 @@ void MonoPolySplitAudioProcessor::prepareToPlay (double sampleRate, int samplesP
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    Fs = sampleRate;
 }
 
 void MonoPolySplitAudioProcessor::releaseResources()
@@ -159,32 +161,62 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
     {
         
         
+        
+        
         for (int n = 0; n < buffer.getNumSamples(); ++n)
         {
+            float x = buffer.getReadPointer(channel)[n];
+            monoDistortion.setDrive(monoDist);
+            polyDistortion.setDrive(polyDist);
+            
+            attackFS = floor((attackMS/1000)*Fs);
+            releaseFS = floor((releaseMS/1000)*Fs);
             
         
-        if(count[channel]<sta->getBufferSize())
-            sta->bufferPopulate(buffer.getReadPointer(channel)[n], channel);
+            if(count[channel]<sta->getBufferSize())
+                sta->bufferPopulate(buffer.getReadPointer(channel)[n], channel);
 
         // ..do something to the data...
             
-        else{
-            count[channel] = 0;
-            bool state = sta->checkSigType(channel);
-                 
-            if(state == true){
-                arrowX = 100;
-                arrowY = 95;}
-                
             else{
-                arrowX = 300;
-                arrowY = 95;}
-                
-                
+                count[channel] = 0;
+                state = sta->checkSigType(channel);
             }
             
-         count[channel]++;
-        buffer.getWritePointer(channel)[n]= buffer.getReadPointer(channel)[n];
+            
+            if(state != prevState || releaseDec>0)
+            {
+                state = prevState;
+                releaseDec = releaseDec - 1;;
+            }
+            
+            else
+            {
+                releaseDec = releaseFS;
+            }
+            
+                
+            xMono = monoDistortion.processSample(x);
+            xMono = xMono * monoGain;
+            xPoly = polyDistortion.processSample(x);
+            xPoly = xPoly * polyGain;
+            
+            
+            count[channel]++;
+            if(state == true){
+                    arrowX = 100;
+                    arrowY = 95;
+                    buffer.getWritePointer(channel)[n]= (releaseDec/releaseFS)*xMono + ((releaseFS-releaseDec)/releaseFS)*xPoly;
+                }
+                
+            else{
+                    arrowX = 300;
+                    arrowY = 95;
+                    buffer.getWritePointer(channel)[n]= (releaseDec/releaseFS)*xPoly + ((releaseFS-releaseDec)/releaseFS)*xMono;
+                }
+            
+            prevState = state;
+            
         }
     }
 }

@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "SigTypeAnalysis.h"
+#include "Distortion.h"
 //==============================================================================
 /**
 */
@@ -61,10 +62,25 @@ public:
     float monoDist = 0.f;
     float polyDist = 0.f;
     float thresh = 0.f;
+    float attackMS = 0.f;
+    float releaseMS = 0.f;
+    
+    float attackFS;
+    float releaseFS=0.f;
+    float xMono=0.f;
+    float xPoly=0.f;
+    double Fs;
+    float releaseDec=0.f;
     SigTypeAnalysis *sta;
+    bool state = true;
 private:
     
+    bool prevState;
+    
+    
     int count[2] = {0};
+    Distortion polyDistortion;
+    Distortion monoDistortion;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoPolySplitAudioProcessor)
