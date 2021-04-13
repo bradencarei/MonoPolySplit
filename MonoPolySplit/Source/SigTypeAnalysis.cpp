@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "SigTypeAnalysis.h"
+#include "PluginProcessor.h"
 
 //==============================================================================
 SigTypeAnalysis::SigTypeAnalysis() : fft (fftOrder)
@@ -28,21 +29,34 @@ SigTypeAnalysis::~SigTypeAnalysis()
 
 void SigTypeAnalysis::bufferPopulate(float sample, int channel){
     
-    analysisBuffer[channel][index] = sample;
-    index++;
+    analysisBuffer[channel][index[channel]] = sample;
+    index[channel]++;
     
 }
 bool SigTypeAnalysis::checkSigType(int channel){
     int count = 0;
-    index = 0;
-    for (auto i = 0; i < 16384; ++i)
+    arrayMax = 0;
+    int maxIndex = 0;
+    index[channel] = 0;
+    for (auto i = 0; i < bufferSize; ++i){
         pushNextSampleIntoFifo (analysisBuffer[channel][i]);
-    
+        }
     fft.performFrequencyOnlyForwardTransform (fftData.data());
+    for (auto p = 40; p < bufferSize/3; ++p){
+        bucket = fftData[p];
+        if(arrayMax < bucket){
+            arrayMax = bucket;
+            maxIndex = p;
+        }
+        
+    }
+        
+    threshCalc = arrayMax*(thresh);
     
-    for(auto i = 0; i<16384;i++)
+    for(auto t = maxIndex; t<bufferSize/3;t++)
     {
-        if(fftData[i] > 15){
+        
+        if(fftData[t] > threshCalc){
             count++;
         }
         
@@ -72,3 +86,18 @@ void SigTypeAnalysis::pushNextSampleIntoFifo (float sample) noexcept
  
         fifo[(size_t) fifoIndex++] = sample; // [9]
     }
+
+void SigTypeAnalysis::setThresh(float threshold)
+{
+    thresh = threshold;
+}
+float SigTypeAnalysis::getThresh()
+{
+    return thresh;
+}
+
+
+int SigTypeAnalysis::getBufferSize()
+{
+    return bufferSize;
+}

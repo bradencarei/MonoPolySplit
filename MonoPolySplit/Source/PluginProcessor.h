@@ -55,10 +55,17 @@ public:
 
     float arrowX = 200;
     float arrowY = 70;
+    
+    float monoGain = 0.f;
+    float polyGain = 0.f;
+    float monoDist = 0.f;
+    float polyDist = 0.f;
+    float thresh = 0.f;
+    SigTypeAnalysis *sta;
 private:
     
-    int count = 0;
-    SigTypeAnalysis *sta;
+    int count[2] = {0};
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoPolySplitAudioProcessor)
 };

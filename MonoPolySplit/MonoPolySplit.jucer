@@ -4,6 +4,8 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="gdIW4y" name="MonoPolySplit">
     <GROUP id="{12546D8F-9F2C-26B3-6489-F2F7C7253759}" name="Source">
+      <FILE id="lH2x9R" name="Distortion.cpp" compile="1" resource="0" file="Source/Distortion.cpp"/>
+      <FILE id="gkjrFG" name="Distortion.h" compile="0" resource="0" file="Source/Distortion.h"/>
       <FILE id="VoAq0v" name="SigTypeAnalysis.cpp" compile="1" resource="0"
             file="Source/SigTypeAnalysis.cpp"/>
       <FILE id="jjdUBF" name="SigTypeAnalysis.h" compile="0" resource="0"

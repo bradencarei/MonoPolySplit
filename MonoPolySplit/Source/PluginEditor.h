@@ -14,7 +14,7 @@
 //==============================================================================
 /**
 */
-class MonoPolySplitAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
+class MonoPolySplitAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer, public juce::Slider::Listener
 {
 public:
     MonoPolySplitAudioProcessorEditor (MonoPolySplitAudioProcessor&);
@@ -30,6 +30,13 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     MonoPolySplitAudioProcessor& audioProcessor;
+    juce::Slider thresh;
+    juce::Slider gainMono;
+    juce::Slider gainPoly;
+    juce::Slider distMono;
+    juce::Slider distPoly;
+    
+    void sliderValueChanged(juce::Slider* slider) override;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoPolySplitAudioProcessorEditor)
 };

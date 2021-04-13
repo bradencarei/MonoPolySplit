@@ -30,6 +30,7 @@ MonoPolySplitAudioProcessor::MonoPolySplitAudioProcessor() :
 
 MonoPolySplitAudioProcessor::~MonoPolySplitAudioProcessor()
 {
+    delete sta;
 }
 
 //==============================================================================
@@ -162,13 +163,13 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
         {
             
         
-        if(count<16385)
+        if(count[channel]<sta->getBufferSize())
             sta->bufferPopulate(buffer.getReadPointer(channel)[n], channel);
 
         // ..do something to the data...
             
         else{
-            count = 0;
+            count[channel] = 0;
             bool state = sta->checkSigType(channel);
                  
             if(state == true){
@@ -182,7 +183,7 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
                 
             }
             
-         count++;
+         count[channel]++;
         buffer.getWritePointer(channel)[n]= buffer.getReadPointer(channel)[n];
         }
     }
