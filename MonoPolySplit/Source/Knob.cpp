@@ -15,4 +15,5 @@ void Knob::drawRotarySlider (juce::Graphics& g,
     juce::AffineTransform rotator;
     g.drawImageTransformed(sprite, rotator.rotated(angle, (float)(sprite.getWidth()/2), (float)(sprite.getHeight()/2)));
     
+    
 }

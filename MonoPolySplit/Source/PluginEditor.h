@@ -32,13 +32,20 @@ private:
     // access the processor object that created it.
     MonoPolySplitAudioProcessor& audioProcessor;
     juce::Slider thresh;
+    juce::Label  threshLabel;
     juce::Slider gainMono;
+    juce::Label  gainMonoLabel;
     juce::Slider gainPoly;
+    juce::Label  gainPolyLabel;
     juce::Slider distMono;
+    juce::Label  distMonoLabel;
     juce::Slider distPoly;
-    juce::Slider attackKnob;
+    juce::Label  distPolyLabel;
     juce::Slider releaseKnob;
+    juce::Label  releaseLabel;
     
+    juce::Image gainImage;
+    juce::Image clipImage;
     void sliderValueChanged(juce::Slider* slider) override;
     
     Knob Knob;

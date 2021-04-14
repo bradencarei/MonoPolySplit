@@ -19,63 +19,62 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     // editor's size to whatever you need it to be.
     setSize (600, 350);
     startTimer(60);
+    gainImage = juce::ImageCache::getFromMemory(BinaryData::Gain_png, BinaryData::Gain_pngSize);
+    clipImage = juce::ImageCache::getFromMemory(BinaryData::Clip_png, BinaryData::Clip_pngSize);
     
+    gainMono.addListener(this);
+    gainMono.setLookAndFeel(&Knob);
+    gainMono.setBounds(35, 45, 75, 75);
+    gainMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    gainMono.setValue(audioProcessor.monoGain);
+    gainMono.setRange(0.0, 1.0,0.01f);
+    gainMono.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
+    addAndMakeVisible(gainMono);
+    
+    
+    gainPoly.addListener(this);
+    gainPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    gainPoly.setBounds(510, 45, 75, 75);
+    gainPoly.setValue(audioProcessor.polyGain);
+    gainPoly.setRange(0.0, 1.0,0.01f);
+    gainPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
+    addAndMakeVisible(gainPoly);
+    gainPoly.setLookAndFeel(&Knob);
+    
+    distMono.addListener(this);
+    distMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    distMono.setBounds(35, 165, 75, 75);
+    distMono.setValue(audioProcessor.monoDist);
+    distMono.setRange(1.f, 10.f,0.01f);
+    distMono.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
+    addAndMakeVisible(distMono);
+    distMono.setLookAndFeel(&Knob);
+    
+    distPoly.addListener(this);
+    distPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    distPoly.setBounds(510, 165, 75, 75);
+    distPoly.setValue(audioProcessor.polyDist);
+    distPoly.setRange(1.f, 10.f,0.01f);
+    distPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
+    addAndMakeVisible(distPoly);
+    distPoly.setLookAndFeel(&Knob);
+
     thresh.addListener(this);
     //thresh.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     thresh.setBounds(200, 250, 200, 50);
     thresh.setValue(audioProcessor.sta->getThresh());
     thresh.setRange(0.0, 1.0,0.01f);
-    thresh.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 200, 25);
+    thresh.setTextBoxStyle(juce::Slider::NoTextBox, false, 200, 25);
     addAndMakeVisible(thresh);
-    
-    gainMono.addListener(this);
-    gainMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    gainMono.setBounds(25, 25, 75, 75);
-    gainMono.setValue(audioProcessor.monoGain);
-    gainMono.setRange(0.0, 1.0,0.01f);
-    gainMono.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
-    addAndMakeVisible(gainMono);
-    gainMono.setLookAndFeel(&Knob);
-    
-    gainPoly.addListener(this);
-    gainPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    gainPoly.setBounds(500, 25, 75, 75);
-    gainPoly.setValue(audioProcessor.polyGain);
-    gainPoly.setRange(0.0, 1.0,0.01f);
-    gainPoly.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
-    addAndMakeVisible(gainPoly);
-    
-    distMono.addListener(this);
-    distMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    distMono.setBounds(25, 125, 75, 75);
-    distMono.setValue(audioProcessor.monoDist);
-    distMono.setRange(1.f, 10.f,0.01f);
-    distMono.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
-    addAndMakeVisible(distMono);
-    
-    distPoly.addListener(this);
-    distPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    distPoly.setBounds(500, 125, 75, 75);
-    distPoly.setValue(audioProcessor.polyDist);
-    distPoly.setRange(1.f, 10.f,0.01f);
-    distPoly.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
-    addAndMakeVisible(distPoly);
-    
-    attackKnob.addListener(this);
-    attackKnob.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    attackKnob.setBounds(125, 250, 75, 75);
-    attackKnob.setValue(audioProcessor.attackMS);
-    attackKnob.setRange(0.f, 100.f, 1);
-    attackKnob.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
-    addAndMakeVisible(attackKnob);
-    
+
     releaseKnob.addListener(this);
-    releaseKnob.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    releaseKnob.setBounds(400, 250, 75, 75);
+    //releaseKnob.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    releaseKnob.setBounds(200, 300, 200, 50);
     releaseKnob.setValue(audioProcessor.releaseMS);
     releaseKnob.setRange(0.f, 2000.f, 1);
-    releaseKnob.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 75, 25);
+    releaseKnob.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(releaseKnob);
+    //releaseKnob.setLookAndFeel(&Knob);
     
 }
 
@@ -93,9 +92,10 @@ void MonoPolySplitAudioProcessorEditor::paint (juce::Graphics& g)
     g.drawRect(120, 20, 360, 220);
     
     
-    g.setGradientFill(juce::ColourGradient(juce::Colours::palegoldenrod, 200, 300, juce::Colours::yellow.brighter(.4), 200, 110, true));
+    
+    g.setGradientFill(juce::ColourGradient(juce::Colours::aliceblue, 300, 300, juce::Colours::skyblue.darker(.5), 300, 110, true));
     g.fillRect(121, 21, 358, 218);
-    g.setColour (juce::Colours::yellow.brighter(.4));
+    g.setColour (juce::Colours::skyblue.darker(.5));
     g.drawLine(200, 110, 300, 110);
     
     
@@ -118,13 +118,17 @@ void MonoPolySplitAudioProcessorEditor::paint (juce::Graphics& g)
     juce::PathStrokeType stroke (1.0f);
     g.strokePath(path,stroke, juce::AffineTransform());
     
-    g.setColour (juce::Colours::yellow.brighter(.4));
+    g.setColour (juce::Colours::skyblue.darker(.5));
     g.drawLine(200, 110, 400, 110);
     
     g.setColour (juce::Colours::black);
     g.drawLine(300, 200, audioProcessor.arrowX+100, audioProcessor.arrowY);
     
-     
+    g.drawImageAt(gainImage, 10, 0);
+    g.drawImageAt(gainImage, 485, 0);
+    
+    g.drawImageAt(clipImage, 20, 120);
+    g.drawImageAt(clipImage, 495, 120);
 }
 
 
@@ -159,10 +163,6 @@ void MonoPolySplitAudioProcessorEditor::sliderValueChanged(juce::Slider * slider
     
     if (slider == &gainPoly){
         audioProcessor.polyDist = distPoly.getValue();
-    }
-    
-    if (slider == &attackKnob){
-        audioProcessor.attackMS = attackKnob.getValue();
     }
     
     if (slider == &releaseKnob){
