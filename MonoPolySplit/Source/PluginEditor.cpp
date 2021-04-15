@@ -23,6 +23,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     clipImage = juce::ImageCache::getFromMemory(BinaryData::Clip_png, BinaryData::Clip_pngSize);
     threshImage = juce::ImageCache::getFromMemory(BinaryData::Thresh_png, BinaryData::Thresh_pngSize);
     releaseImage = juce::ImageCache::getFromMemory(BinaryData::Release_png, BinaryData::Release_pngSize);
+    tremImage = juce::ImageCache::getFromMemory(BinaryData::Trem_png, BinaryData::Trem_pngSize);
     
     gainMono.addListener(this);
     gainMono.setLookAndFeel(&Knob);
@@ -60,6 +61,33 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     distPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(distPoly);
     distPoly.setLookAndFeel(&Knob);
+    
+    tremMono.addListener(this);
+    tremMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    tremMono.setBounds(35, 285, 75, 75);
+    tremMono.setValue(audioProcessor.monoTremRate);
+    tremMono.setRange(.1f, 10.f,0.1f);
+    tremMono.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
+    addAndMakeVisible(tremMono);
+    tremMono.setLookAndFeel(&Knob);
+    
+    tremPoly.addListener(this);
+    tremPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    tremPoly.setBounds(510, 285, 75, 75);
+    tremPoly.setValue(audioProcessor.polyTremRate);
+    tremPoly.setRange(.1f, 10.f,0.1f);
+    tremPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
+    addAndMakeVisible(tremPoly);
+    tremPoly.setLookAndFeel(&Knob);
+    
+    distPoly.addListener(this);
+    distPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    distPoly.setBounds(510, 165, 75, 75);
+    distPoly.setValue(audioProcessor.polyDist);
+    distPoly.setRange(1.f, 10.f,0.01f);
+    distPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
+    addAndMakeVisible(distPoly);
+    distPoly.setLookAndFeel(&Knob);
 
     thresh.addListener(this);
     //thresh.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
@@ -77,6 +105,22 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     releaseKnob.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(releaseKnob);
     //releaseKnob.setLookAndFeel(&Knob);
+    
+    monoTremButton.addListener(this);
+    monoTremButton.setBounds(100,258,50,20);
+    monoTremButton.setButtonText("Off");
+    monoTremButton.setColour(0x1000100, juce::Colours::darkslategrey);
+    monoTremButton.setColour(0x1000101, juce::Colours::dodgerblue.brighter(.6));
+    monoTremButton.setToggleState(false, juce::dontSendNotification);
+    addAndMakeVisible(monoTremButton);
+    
+    polyTremButton.addListener(this);
+    polyTremButton.setBounds(450,258,50,20);
+    polyTremButton.setButtonText("Off");
+    polyTremButton.setColour(0x1000100, juce::Colours::darkslategrey);
+    polyTremButton.setColour(0x1000101, juce::Colours::dodgerblue.brighter(.6));
+    polyTremButton.setToggleState(false, juce::dontSendNotification);
+    addAndMakeVisible(polyTremButton);
     
     sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"monoGain",gainMono));
     sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"polyGain",gainPoly));
@@ -144,6 +188,9 @@ void MonoPolySplitAudioProcessorEditor::paint (juce::Graphics& g)
     g.drawImage(clipImage, 32, 132, 75,30,0,0,100,50);
     g.drawImage(clipImage, 507, 132, 75,30,0,0,100,50);
     
+    g.drawImage(tremImage, 25, 255, 70,25,0,0,100,40);
+    g.drawImage(tremImage, 500, 255, 70,25,0,0,100,40);
+    
    // g.drawImageAt(threshImage, 120, 235);
     g.drawImage(threshImage, 258, 240, 85,30,0,0,130,50);
     //g.drawImageAt(releaseImage, 120, 295);
@@ -185,8 +232,43 @@ void MonoPolySplitAudioProcessorEditor::sliderValueChanged(juce::Slider * slider
         audioProcessor.polyDist = distPoly.getValue();
     }
     
+    if (slider == &tremMono){
+        audioProcessor.monoTremRate = tremMono.getValue();
+    }
+    
+    if (slider == &tremPoly){
+        audioProcessor.polyTremRate = tremPoly.getValue();
+    }
+    
     if (slider == &releaseKnob){
         audioProcessor.releaseMS = releaseKnob.getValue();
         audioProcessor.releaseDec = floor((audioProcessor.releaseMS/1000)*audioProcessor.Fs);
     }
 }
+
+void MonoPolySplitAudioProcessorEditor::buttonClicked(juce::Button * button){
+    
+    if (button == &monoTremButton){
+        if(monoTremButton.getToggleState()==true){
+            monoTremButton.setToggleState(false, juce::dontSendNotification);
+            monoTremButton.setButtonText("Off");
+        }
+        else{
+            monoTremButton.setToggleState(true, juce::dontSendNotification);
+            monoTremButton.setButtonText("On");
+        }
+    }
+    
+    if (button == &polyTremButton){
+        if(polyTremButton.getToggleState()==true){
+            polyTremButton.setToggleState(false, juce::dontSendNotification);
+            polyTremButton.setButtonText("Off");
+        }
+        else{
+            polyTremButton.setToggleState(true, juce::dontSendNotification);
+            polyTremButton.setButtonText("On");
+        }
+    }
+    
+}
+

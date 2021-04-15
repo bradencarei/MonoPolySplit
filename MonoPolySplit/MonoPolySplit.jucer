@@ -4,6 +4,7 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="gdIW4y" name="MonoPolySplit">
     <GROUP id="{8A7D8883-E43E-45A6-CEF2-DCE281CFA1F1}" name="BinaryData">
+      <FILE id="SM289t" name="Trem.png" compile="0" resource="1" file="Source/BinaryData/Trem.png"/>
       <FILE id="Ohnzj7" name="Release.png" compile="0" resource="1" file="Source/BinaryData/Release.png"/>
       <FILE id="tVm6PW" name="Thresh.png" compile="0" resource="1" file="Source/BinaryData/Thresh.png"/>
       <FILE id="Ol5n1G" name="Clip.png" compile="0" resource="1" file="Source/BinaryData/Clip.png"/>
@@ -11,6 +12,8 @@
       <FILE id="z3z8bV" name="Knob.png" compile="0" resource="1" file="Source/BinaryData/Knob.png"/>
     </GROUP>
     <GROUP id="{12546D8F-9F2C-26B3-6489-F2F7C7253759}" name="Source">
+      <FILE id="HyxX52" name="Tremolo.cpp" compile="1" resource="0" file="Source/Tremolo.cpp"/>
+      <FILE id="UNEzsL" name="Tremolo.h" compile="0" resource="0" file="Source/Tremolo.h"/>
       <FILE id="g0TFaM" name="Knob.cpp" compile="1" resource="0" file="Source/Knob.cpp"/>
       <FILE id="dstBLH" name="Knob.h" compile="0" resource="0" file="Source/Knob.h"/>
       <FILE id="lH2x9R" name="Distortion.cpp" compile="1" resource="0" file="Source/Distortion.cpp"/>

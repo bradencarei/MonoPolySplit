@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "SigTypeAnalysis.h"
 #include "Distortion.h"
+#include "Tremolo.h"
 //==============================================================================
 /**
 */
@@ -69,6 +70,10 @@ public:
     float releaseFS=0.f;
     float xMono=0.f;
     float xPoly=0.f;
+    float polyTremRate=1.f;
+    float monoTremRate=1.f;
+    int polyTremTog = 0;
+    int monoTremTog = 0;
     double Fs;
     float releaseDec=0.f;
     SigTypeAnalysis *sta;
@@ -85,6 +90,9 @@ private:
     int count[2] = {0};
     Distortion polyDistortion;
     Distortion monoDistortion;
+    
+    Tremolo polyTremolo;
+    Tremolo monoTremolo;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoPolySplitAudioProcessor)

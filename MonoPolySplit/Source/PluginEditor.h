@@ -15,7 +15,7 @@
 //==============================================================================
 /**
 */
-class MonoPolySplitAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer, public juce::Slider::Listener
+class MonoPolySplitAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer, public juce::Slider::Listener, public juce::Button::Listener
 {
 public:
     MonoPolySplitAudioProcessorEditor (MonoPolySplitAudioProcessor&);
@@ -26,6 +26,8 @@ public:
     void resized() override;
     void timerCallback() override ;
     
+    void sliderValueChanged(juce::Slider* slider) override;
+    void buttonClicked(juce::Button * button) override;
     
     
 private:
@@ -44,17 +46,24 @@ private:
     juce::Label  distPolyLabel;
     juce::Slider releaseKnob;
     juce::Label  releaseLabel;
+    juce::Slider tremMono;
+    juce::Label  tremMonoLabel;
+    juce::Slider tremPoly;
+    juce::Label  tremPolyLabel;
+    
     
     juce::Image gainImage;
     juce::Image clipImage;
     juce::Image threshImage;
     juce::Image releaseImage;
-    
-    void sliderValueChanged(juce::Slider* slider) override;
+    juce::Image tremImage;
     
     Knob Knob;
+    
+    juce::TextButton monoTremButton;
+    juce::TextButton polyTremButton;
         
-    //juce::LookAndFeel_V3 lookAndFeel3;
+   
 public:
     std::vector<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>> sliderAttachments;
     

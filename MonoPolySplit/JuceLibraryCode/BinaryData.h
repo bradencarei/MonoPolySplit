@@ -8,6 +8,9 @@
 
 namespace BinaryData
 {
+    extern const char*   Trem_png;
+    const int            Trem_pngSize = 2833;
+
     extern const char*   Release_png;
     const int            Release_pngSize = 5025;
 
@@ -24,7 +27,7 @@ namespace BinaryData
     const int            Knob_pngSize = 7241;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 5;
+    const int namedResourceListSize = 6;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

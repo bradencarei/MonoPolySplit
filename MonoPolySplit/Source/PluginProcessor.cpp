@@ -189,6 +189,8 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
             float x = buffer.getReadPointer(channel)[n];
             monoDistortion.setDrive(monoDist);
             polyDistortion.setDrive(polyDist);
+            monoTremolo.setRate(monoTremRate, Fs);
+            polyTremolo.setRate(polyTremRate,Fs);
             
             attackFS = floor((attackMS/1000)*Fs);
             releaseFS = floor((releaseMS/1000)*Fs);
@@ -222,6 +224,11 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
             xPoly = polyDistortion.processSample(x);
             xPoly = xPoly * polyGain;
             
+            
+            if(monoTremTog == 1)
+               xMono =  monoTremolo.processSample(xMono, Fs);
+            if(polyTremTog == 1)
+                xPoly = polyTremolo.processSample(xPoly, Fs);
             
             count[channel]++;
             if(stateAn == true){
