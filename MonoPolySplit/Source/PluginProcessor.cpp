@@ -23,7 +23,8 @@ MonoPolySplitAudioProcessor::MonoPolySplitAudioProcessor() :
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), state(*this, nullptr, "PlugParams",
+                               createParameterLayout())
 #endif
 {
     sta = new SigTypeAnalysis;
@@ -32,6 +33,20 @@ MonoPolySplitAudioProcessor::MonoPolySplitAudioProcessor() :
 MonoPolySplitAudioProcessor::~MonoPolySplitAudioProcessor()
 {
     delete sta;
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout MonoPolySplitAudioProcessor::createParameterLayout(){
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+    
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoGain","Monophonic Gain",0.f,1.f,.01f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyGain","Polyphonic Gain",0.f,1.f,.01f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoDist","Monophonic Distortion",0.f,1.f,.01f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyDist","Polyphonic Distortion",0.f,1.f,.01f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("release","Release",0.f,2.f,1.f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("thresh","Threshold",0, 2000, 1) );
+    
+    return {params.begin() , params.end() };
+    
 }
 
 //==============================================================================
@@ -102,6 +117,12 @@ void MonoPolySplitAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     Fs = sampleRate;
+    thresh = *state.getRawParameterValue("thresh");
+    monoGain = *state.getRawParameterValue("monoGain");
+    polyGain = *state.getRawParameterValue("polyGain");
+    monoDist = *state.getRawParameterValue("monoDist");
+    polyDist = *state.getRawParameterValue("polyDist");
+    releaseMS = *state.getRawParameterValue("release");
 }
 
 void MonoPolySplitAudioProcessor::releaseResources()
@@ -180,13 +201,13 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
             
             else{
                 count[channel] = 0;
-                state = sta->checkSigType(channel);
+                stateAn = sta->checkSigType(channel);
             }
             
             
-            if(state != prevState || releaseDec>0)
+            if(stateAn != prevState || releaseDec>0)
             {
-                state = prevState;
+                stateAn = prevState;
                 releaseDec = releaseDec - 1;;
             }
             
@@ -203,7 +224,7 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
             
             
             count[channel]++;
-            if(state == true){
+            if(stateAn == true){
                     arrowX = 100;
                     arrowY = 95;
                     buffer.getWritePointer(channel)[n]= (releaseDec/releaseFS)*xMono + ((releaseFS-releaseDec)/releaseFS)*xPoly;
@@ -215,7 +236,7 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
                     buffer.getWritePointer(channel)[n]= (releaseDec/releaseFS)*xPoly + ((releaseFS-releaseDec)/releaseFS)*xMono;
                 }
             
-            prevState = state;
+            prevState = stateAn;
             
         }
     }
@@ -238,12 +259,18 @@ void MonoPolySplitAudioProcessor::getStateInformation (juce::MemoryBlock& destDa
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    auto currentState = state.copyState();
+    std::unique_ptr<juce::XmlElement> xml (currentState.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void MonoPolySplitAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xml ( getXmlFromBinary(data, sizeInBytes));
+    if (xml && xml->hasTagName(state.state.getType())){
+        state.replaceState(juce::ValueTree::fromXml(*xml));}
 }
 
 

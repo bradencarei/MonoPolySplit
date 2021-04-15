@@ -27,6 +27,7 @@ public:
     void timerCallback() override ;
     
     
+    
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
@@ -46,11 +47,16 @@ private:
     
     juce::Image gainImage;
     juce::Image clipImage;
+    juce::Image threshImage;
+    juce::Image releaseImage;
+    
     void sliderValueChanged(juce::Slider* slider) override;
     
     Knob Knob;
         
     //juce::LookAndFeel_V3 lookAndFeel3;
+public:
+    std::vector<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>> sliderAttachments;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoPolySplitAudioProcessorEditor)
 };

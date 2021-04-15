@@ -72,7 +72,11 @@ public:
     double Fs;
     float releaseDec=0.f;
     SigTypeAnalysis *sta;
-    bool state = true;
+    bool stateAn = true;
+    
+    juce::AudioProcessorValueTreeState state;
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    
 private:
     
     bool prevState;

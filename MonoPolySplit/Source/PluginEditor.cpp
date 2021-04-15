@@ -21,6 +21,8 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     startTimer(60);
     gainImage = juce::ImageCache::getFromMemory(BinaryData::Gain_png, BinaryData::Gain_pngSize);
     clipImage = juce::ImageCache::getFromMemory(BinaryData::Clip_png, BinaryData::Clip_pngSize);
+    threshImage = juce::ImageCache::getFromMemory(BinaryData::Thresh_png, BinaryData::Thresh_pngSize);
+    releaseImage = juce::ImageCache::getFromMemory(BinaryData::Release_png, BinaryData::Release_pngSize);
     
     gainMono.addListener(this);
     gainMono.setLookAndFeel(&Knob);
@@ -61,7 +63,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
 
     thresh.addListener(this);
     //thresh.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    thresh.setBounds(200, 250, 200, 50);
+    thresh.setBounds(200, 255, 200, 50);
     thresh.setValue(audioProcessor.sta->getThresh());
     thresh.setRange(0.0, 1.0,0.01f);
     thresh.setTextBoxStyle(juce::Slider::NoTextBox, false, 200, 25);
@@ -69,13 +71,19 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
 
     releaseKnob.addListener(this);
     //releaseKnob.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    releaseKnob.setBounds(200, 300, 200, 50);
+    releaseKnob.setBounds(200, 310, 200, 50);
     releaseKnob.setValue(audioProcessor.releaseMS);
-    releaseKnob.setRange(0.f, 2000.f, 1);
+    releaseKnob.setRange(0, 2000.f, 1);
     releaseKnob.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(releaseKnob);
     //releaseKnob.setLookAndFeel(&Knob);
     
+    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"monoGain",gainMono));
+    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"polyGain",gainPoly));
+    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"monoDist",distMono));
+    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"polyDist",distPoly));
+    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"release",releaseKnob));
+    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"thresh",thresh));
 }
 
 MonoPolySplitAudioProcessorEditor::~MonoPolySplitAudioProcessorEditor()
@@ -87,15 +95,15 @@ void MonoPolySplitAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
+    g.fillAll(juce::Colours::dimgrey);
     g.setColour (juce::Colours::black);
     g.drawRect(120, 20, 360, 220);
     
     
     
-    g.setGradientFill(juce::ColourGradient(juce::Colours::aliceblue, 300, 300, juce::Colours::skyblue.darker(.5), 300, 110, true));
+    g.setGradientFill(juce::ColourGradient(juce::Colours::aliceblue, 300, 300, juce::Colours::dodgerblue.brighter(.35), 300, 110, true));
     g.fillRect(121, 21, 358, 218);
-    g.setColour (juce::Colours::skyblue.darker(.5));
+    g.setColour (juce::Colours::lightcyan.darker(.5));
     g.drawLine(200, 110, 300, 110);
     
     
@@ -118,17 +126,29 @@ void MonoPolySplitAudioProcessorEditor::paint (juce::Graphics& g)
     juce::PathStrokeType stroke (1.0f);
     g.strokePath(path,stroke, juce::AffineTransform());
     
-    g.setColour (juce::Colours::skyblue.darker(.5));
+    g.setColour (juce::Colours::dodgerblue.brighter(.35));
     g.drawLine(200, 110, 400, 110);
     
     g.setColour (juce::Colours::black);
     g.drawLine(300, 200, audioProcessor.arrowX+100, audioProcessor.arrowY);
     
-    g.drawImageAt(gainImage, 10, 0);
-    g.drawImageAt(gainImage, 485, 0);
+    //g.drawImageAt(gainImage, 10, 5);
+    //g.drawImageAt(gainImage, 485, 5);
     
-    g.drawImageAt(clipImage, 20, 120);
-    g.drawImageAt(clipImage, 495, 120);
+    g.drawImage(gainImage, 25, 15, 70,25,0,0,100,40);
+    g.drawImage(gainImage, 500, 15, 70,25,0,0,100,40);
+    
+    //g.drawImageAt(clipImage, 23, 120);
+    //g.drawImageAt(clipImage, 498, 120);
+    
+    g.drawImage(clipImage, 32, 132, 75,30,0,0,100,50);
+    g.drawImage(clipImage, 507, 132, 75,30,0,0,100,50);
+    
+   // g.drawImageAt(threshImage, 120, 235);
+    g.drawImage(threshImage, 258, 240, 85,30,0,0,130,50);
+    //g.drawImageAt(releaseImage, 120, 295);
+    g.drawImage(releaseImage, 250, 295, 100,30,0,0,155,50);//, <#int sourceX#>, <#int sourceY#>, <#int sourceWidth#>, <#int sourceHeight#>)
+  
 }
 
 
