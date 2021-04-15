@@ -40,8 +40,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout MonoPolySplitAudioProcessor:
     
     params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoGain","Monophonic Gain",0.f,1.f,.01f) );
     params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyGain","Polyphonic Gain",0.f,1.f,.01f) );
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoDist","Monophonic Distortion",0.f,1.f,.01f) );
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyDist","Polyphonic Distortion",0.f,1.f,.01f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoDist","Monophonic Distortion",1.f,10.f,.01f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyDist","Polyphonic Distortion",1.f,10.f,.01f) );
     params.push_back( std::make_unique<juce::AudioParameterFloat> ("release","Release",0.f,2.f,1.f) );
     params.push_back( std::make_unique<juce::AudioParameterFloat> ("thresh","Threshold",0, 2000, 1) );
     

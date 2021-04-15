@@ -57,10 +57,10 @@ public:
     float arrowX = 200;
     float arrowY = 70;
     
-    float monoGain = 0.f;
-    float polyGain = 0.f;
-    float monoDist = 0.f;
-    float polyDist = 0.f;
+    float monoGain = 1.f;
+    float polyGain = 1.f;
+    float monoDist = 1.f;
+    float polyDist = 1.f;
     float thresh = 0.f;
     float attackMS = 0.f;
     float releaseMS = 0.f;

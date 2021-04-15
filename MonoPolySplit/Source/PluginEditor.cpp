@@ -29,7 +29,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     gainMono.setBounds(35, 45, 75, 75);
     gainMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     gainMono.setValue(audioProcessor.monoGain);
-    gainMono.setRange(0.0, 1.0,0.01f);
+    gainMono.setRange(0.f, 1.f,0.01f);
     gainMono.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(gainMono);
     
@@ -38,7 +38,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     gainPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     gainPoly.setBounds(510, 45, 75, 75);
     gainPoly.setValue(audioProcessor.polyGain);
-    gainPoly.setRange(0.0, 1.0,0.01f);
+    gainPoly.setRange(0.f, 1.f,0.01f);
     gainPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(gainPoly);
     gainPoly.setLookAndFeel(&Knob);
@@ -65,7 +65,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     //thresh.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     thresh.setBounds(200, 255, 200, 50);
     thresh.setValue(audioProcessor.sta->getThresh());
-    thresh.setRange(0.0, 1.0,0.01f);
+    thresh.setRange(0.f, 1.f,0.01f);
     thresh.setTextBoxStyle(juce::Slider::NoTextBox, false, 200, 25);
     addAndMakeVisible(thresh);
 
