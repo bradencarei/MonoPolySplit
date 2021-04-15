@@ -252,10 +252,12 @@ void MonoPolySplitAudioProcessorEditor::buttonClicked(juce::Button * button){
         if(monoTremButton.getToggleState()==true){
             monoTremButton.setToggleState(false, juce::dontSendNotification);
             monoTremButton.setButtonText("Off");
+            audioProcessor.monoTremTog = 0;
         }
         else{
             monoTremButton.setToggleState(true, juce::dontSendNotification);
             monoTremButton.setButtonText("On");
+            audioProcessor.monoTremTog = 1;
         }
     }
     
@@ -263,10 +265,12 @@ void MonoPolySplitAudioProcessorEditor::buttonClicked(juce::Button * button){
         if(polyTremButton.getToggleState()==true){
             polyTremButton.setToggleState(false, juce::dontSendNotification);
             polyTremButton.setButtonText("Off");
+            audioProcessor.polyTremTog = 0;
         }
         else{
             polyTremButton.setToggleState(true, juce::dontSendNotification);
             polyTremButton.setButtonText("On");
+            audioProcessor.polyTremTog = 1;
         }
     }
     

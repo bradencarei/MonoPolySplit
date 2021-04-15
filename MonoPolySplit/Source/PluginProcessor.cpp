@@ -207,12 +207,17 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
             }
             
             
-            if(stateAn != prevState || releaseDec>0)
+            if(stateAn != prevState)
             {
                 stateAn = prevState;
-                releaseDec = releaseDec - 1;;
+                releaseDec = releaseDec - 1;
             }
             
+            else if(releaseDec>0 && releaseDec < releaseFS)
+            {
+                stateAn = prevState;
+                releaseDec = releaseDec - 1;
+            }
             else
             {
                 releaseDec = releaseFS;
@@ -226,21 +231,25 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
             
             
             if(monoTremTog == 1)
-               xMono =  monoTremolo.processSample(xMono, Fs);
+               xMono =  monoTremolo.processSample(xMono);
             if(polyTremTog == 1)
-                xPoly = polyTremolo.processSample(xPoly, Fs);
+                xPoly = polyTremolo.processSample(xPoly);
             
-            count[channel]++;
+             count[channel]++;
             if(stateAn == true){
                     arrowX = 100;
                     arrowY = 95;
-                    buffer.getWritePointer(channel)[n]= (releaseDec/releaseFS)*xMono + ((releaseFS-releaseDec)/releaseFS)*xPoly;
+                float polyMult =((releaseFS-releaseDec)/releaseFS);
+                float monoMult =(releaseDec/releaseFS);
+                buffer.getWritePointer(channel)[n]= buffer.getWritePointer(channel)[n]= polyMult*xPoly + monoMult*xMono;
                 }
                 
             else{
                     arrowX = 300;
                     arrowY = 95;
-                    buffer.getWritePointer(channel)[n]= (releaseDec/releaseFS)*xPoly + ((releaseFS-releaseDec)/releaseFS)*xMono;
+                float polyMult =(releaseDec/releaseFS);
+                float monoMult =((releaseFS-releaseDec)/releaseFS);
+                buffer.getWritePointer(channel)[n]= polyMult*xPoly + monoMult*xMono;
                 }
             
             prevState = stateAn;
