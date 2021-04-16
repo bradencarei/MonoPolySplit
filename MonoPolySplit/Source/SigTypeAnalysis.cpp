@@ -29,6 +29,7 @@ SigTypeAnalysis::~SigTypeAnalysis()
 
 void SigTypeAnalysis::bufferPopulate(float sample, int channel){
     
+    //Populate the buffer to be pushed into fifo array
     analysisBuffer[channel][index[channel]] = sample;
     index[channel]++;
     
@@ -39,12 +40,18 @@ bool SigTypeAnalysis::checkSigType(int channel){
     arrayMax = 0;
     int maxIndex = 0;
     index[channel] = 0;
+    
+    //Push samples into fifo
     for (auto i = 0; i < bufferSiz; ++i){
         pushNextSampleIntoFifo (analysisBuffer[channel][i]);
         }
+    
+    //Perform fft
     fft.performFrequencyOnlyForwardTransform (fftData.data());
     for (auto p = 40; p < bufferSiz/3; ++p){
+        //save comparison variable
         bucket = fftData[p];
+        //Check to see if comparison variable is greater than max and if so set newmax
         if(arrayMax < bucket){
             arrayMax = bucket;
             maxIndex = p;
@@ -52,11 +59,15 @@ bool SigTypeAnalysis::checkSigType(int channel){
         
     }
         
+    //Calculate the threshold in percentage of max
     threshCalc = arrayMax*(analysisThresh);
+    
+    //Necessary for fft to analyze next array
     nextFFTBlockReady = false;
-    for(auto t = maxIndex; t<bufferSiz/3;t++)
+    for(auto t = 0; t<bufferSiz/3;t++)
     {
         
+        //check for freq domain peaks greater than percentage of max
         if(fftData[t] > threshCalc){
             count++;
         }
