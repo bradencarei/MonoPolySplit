@@ -27,23 +27,26 @@ MonoPolySplitAudioProcessor::MonoPolySplitAudioProcessor() :
                                createParameterLayout())
 #endif
 {
-    sta = new SigTypeAnalysis;
+    //sta = new SigTypeAnalysis;
 }
 
 MonoPolySplitAudioProcessor::~MonoPolySplitAudioProcessor()
 {
-    delete sta;
+    //delete sta;
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout MonoPolySplitAudioProcessor::createParameterLayout(){
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoGain","Monophonic Gain",0.f,1.f,.01f) );
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyGain","Polyphonic Gain",0.f,1.f,.01f) );
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoDist","Monophonic Distortion",1.f,10.f,.01f) );
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyDist","Polyphonic Distortion",1.f,10.f,.01f) );
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("release","Release",0.f,2.f,1.f) );
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("thresh","Threshold",0, 2000, 1) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoGain","Monophonic Gain",0.f,2.f,1.f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyGain","Polyphonic Gain",0.f,2.f,1.f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoDist","Monophonic Distortion",1.f,10.f,1.f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyDist","Polyphonic Distortion",1.f,10.f,1.f) );
+    
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("release","Release",1,2000,1) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("thresh","Threshold",0.f, 1.f,1.f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("tremMono","Mono Tremolo Rate",0.1f, 10.f,1.f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("tremPoly","Poly Tremolo Rate",0.1f, 10.f,1.f) );
     
     return {params.begin() , params.end() };
     
@@ -117,12 +120,15 @@ void MonoPolySplitAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     Fs = sampleRate;
-    thresh = *state.getRawParameterValue("thresh");
+    threshold = *state.getRawParameterValue("thresh");
     monoGain = *state.getRawParameterValue("monoGain");
     polyGain = *state.getRawParameterValue("polyGain");
     monoDist = *state.getRawParameterValue("monoDist");
     polyDist = *state.getRawParameterValue("polyDist");
     releaseMS = *state.getRawParameterValue("release");
+    polyTremRate = *state.getRawParameterValue("tremPoly");
+    monoTremRate = *state.getRawParameterValue("tremMono");
+    
 }
 
 void MonoPolySplitAudioProcessor::releaseResources()
@@ -194,28 +200,28 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
             
             attackFS = floor((attackMS/1000)*Fs);
             releaseFS = floor((releaseMS/1000)*Fs);
-            
+            sta.setThresh(threshold);
         
-            if(count[channel]<sta->getBufferSize())
-                sta->bufferPopulate(buffer.getReadPointer(channel)[n], channel);
+            if(count[channel]<sta.getBufferSize())
+                sta.bufferPopulate(buffer.getReadPointer(channel)[n], channel);
 
         // ..do something to the data...
             
             else{
                 count[channel] = 0;
-                stateAn = sta->checkSigType(channel);
+                sta.setThresh(threshold);
+                stateAn = sta.checkSigType(channel);
             }
             
             
             if(stateAn != prevState)
             {
-                stateAn = prevState;
                 releaseDec = releaseDec - 1;
             }
             
             else if(releaseDec>0 && releaseDec < releaseFS)
             {
-                stateAn = prevState;
+                
                 releaseDec = releaseDec - 1;
             }
             else

@@ -27,84 +27,115 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     
     gainMono.addListener(this);
     gainMono.setLookAndFeel(&Knob);
-    gainMono.setBounds(35, 45, 75, 75);
+    gainMono.setBounds(35, 40, 75, 75);
     gainMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     gainMono.setValue(audioProcessor.monoGain);
-    gainMono.setRange(0.f, 1.f,0.01f);
+    gainMono.setRange(0.f, 4.f,0.01f);
     gainMono.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(gainMono);
     
     
+    gainMonoLabel.setBounds(37,100 , 60, 20);
+    gainMonoLabel.setText(juce::String((float)(round((20*log10(audioProcessor.monoGain))*10))/10) + "  dB", juce::dontSendNotification);
+    gainMonoLabel.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(gainMonoLabel);
+    
     gainPoly.addListener(this);
     gainPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    gainPoly.setBounds(510, 45, 75, 75);
+    gainPoly.setBounds(510, 40, 75, 75);
     gainPoly.setValue(audioProcessor.polyGain);
-    gainPoly.setRange(0.f, 1.f,0.01f);
+    gainPoly.setRange(0.f, 4.f,0.01f);
     gainPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(gainPoly);
     gainPoly.setLookAndFeel(&Knob);
     
+    gainPolyLabel.setBounds(512 ,100 , 60, 20);
+    gainPolyLabel.setText(juce::String((float)(round((20*log10(audioProcessor.polyGain))*10))/10) + "  dB", juce::dontSendNotification);
+    gainPolyLabel.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(gainPolyLabel);
+    
     distMono.addListener(this);
     distMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    distMono.setBounds(35, 165, 75, 75);
+    distMono.setBounds(35, 155, 75, 75);
     distMono.setValue(audioProcessor.monoDist);
     distMono.setRange(1.f, 10.f,0.01f);
     distMono.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(distMono);
     distMono.setLookAndFeel(&Knob);
     
+    distMonoLabel.setBounds(37, 215 , 60, 20);
+    distMonoLabel.setText(juce::String((float)(round((20*log10(audioProcessor.monoDist))*10))/10) + "  dB", juce::dontSendNotification);
+    distMonoLabel.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(distMonoLabel);
+    
     distPoly.addListener(this);
     distPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    distPoly.setBounds(510, 165, 75, 75);
+    distPoly.setBounds(510, 155, 75, 75);
     distPoly.setValue(audioProcessor.polyDist);
     distPoly.setRange(1.f, 10.f,0.01f);
     distPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(distPoly);
     distPoly.setLookAndFeel(&Knob);
     
+    distPolyLabel.setBounds(512 ,215 , 60, 20);
+    distPolyLabel.setText(juce::String((float)(round((20*log10(audioProcessor.polyDist))*10))/10) + "  dB", juce::dontSendNotification);
+    distPolyLabel.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(distPolyLabel);
+    
     tremMono.addListener(this);
     tremMono.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    tremMono.setBounds(35, 285, 75, 75);
+    tremMono.setBounds(35, 270, 75, 75);
     tremMono.setValue(audioProcessor.monoTremRate);
     tremMono.setRange(.1f, 10.f,0.1f);
     tremMono.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(tremMono);
     tremMono.setLookAndFeel(&Knob);
     
+    tremMonoLabel.setBounds(37, 330, 60, 20);
+    tremMonoLabel.setText(juce::String(audioProcessor.monoTremRate) + "  Hz", juce::dontSendNotification);
+    tremMonoLabel.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(tremMonoLabel);
+    
     tremPoly.addListener(this);
     tremPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    tremPoly.setBounds(510, 285, 75, 75);
+    tremPoly.setBounds(510, 270, 75, 75);
     tremPoly.setValue(audioProcessor.polyTremRate);
     tremPoly.setRange(.1f, 10.f,0.1f);
     tremPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(tremPoly);
     tremPoly.setLookAndFeel(&Knob);
     
-    distPoly.addListener(this);
-    distPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    distPoly.setBounds(510, 165, 75, 75);
-    distPoly.setValue(audioProcessor.polyDist);
-    distPoly.setRange(1.f, 10.f,0.01f);
-    distPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
-    addAndMakeVisible(distPoly);
-    distPoly.setLookAndFeel(&Knob);
-
-    thresh.addListener(this);
+    tremPolyLabel.setBounds(37, 330, 60, 20);
+    tremPolyLabel.setText(juce::String(audioProcessor.polyTremRate) + "  Hz", juce::dontSendNotification);
+    tremPolyLabel.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(tremPolyLabel);
+    
+    threshSlider.addListener(this);
     //thresh.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    thresh.setBounds(200, 255, 200, 50);
-    thresh.setValue(audioProcessor.sta->getThresh());
-    thresh.setRange(0.f, 1.f,0.01f);
-    thresh.setTextBoxStyle(juce::Slider::NoTextBox, false, 200, 25);
-    addAndMakeVisible(thresh);
+    threshSlider.setBounds(175, 255, 200, 50);
+    threshSlider.setValue(audioProcessor.threshold);
+    threshSlider.setRange(0.f, 1.f,0.01f);
+    threshSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 200, 25);
+    addAndMakeVisible(threshSlider);
+    
+    threshLabel.setBounds(365 ,268 , 60, 20);
+    threshLabel.setText(juce::String(audioProcessor.threshold*100) + "  %", juce::dontSendNotification);
+    threshLabel.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(threshLabel);
 
     releaseKnob.addListener(this);
     //releaseKnob.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    releaseKnob.setBounds(200, 310, 200, 50);
+    releaseKnob.setBounds(175, 310, 200, 50);
     releaseKnob.setValue(audioProcessor.releaseMS);
-    releaseKnob.setRange(0, 2000.f, 1);
+    releaseKnob.setRange(1, 2000, 1);
     releaseKnob.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(releaseKnob);
     //releaseKnob.setLookAndFeel(&Knob);
+    
+    releaseLabel.setBounds(365 , 323 , 80, 20);
+    releaseLabel.setText(juce::String(round(audioProcessor.releaseMS)) + "  ms", juce::dontSendNotification);
+    releaseLabel.setJustificationType(juce::Justification::right);
+    addAndMakeVisible(releaseLabel);
     
     monoTremButton.addListener(this);
     monoTremButton.setBounds(100,258,50,20);
@@ -127,7 +158,9 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"monoDist",distMono));
     sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"polyDist",distPoly));
     sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"release",releaseKnob));
-    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"thresh",thresh));
+    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"thresh",threshSlider));
+    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"tremMono",tremMono));
+    sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"tremPoly",tremPoly));
 }
 
 MonoPolySplitAudioProcessorEditor::~MonoPolySplitAudioProcessorEditor()
@@ -179,17 +212,17 @@ void MonoPolySplitAudioProcessorEditor::paint (juce::Graphics& g)
     //g.drawImageAt(gainImage, 10, 5);
     //g.drawImageAt(gainImage, 485, 5);
     
-    g.drawImage(gainImage, 25, 15, 70,25,0,0,100,40);
-    g.drawImage(gainImage, 500, 15, 70,25,0,0,100,40);
+    g.drawImage(gainImage, 25, 10, 70,25,0,0,100,40);
+    g.drawImage(gainImage, 500, 10, 70,25,0,0,100,40);
     
     //g.drawImageAt(clipImage, 23, 120);
     //g.drawImageAt(clipImage, 498, 120);
     
-    g.drawImage(clipImage, 32, 132, 75,30,0,0,100,50);
-    g.drawImage(clipImage, 507, 132, 75,30,0,0,100,50);
+    g.drawImage(clipImage, 32, 122, 75,30,0,0,100,50);
+    g.drawImage(clipImage, 507, 122, 75,30,0,0,100,50);
     
-    g.drawImage(tremImage, 25, 255, 70,25,0,0,100,40);
-    g.drawImage(tremImage, 500, 255, 70,25,0,0,100,40);
+    g.drawImage(tremImage, 25, 240, 70,25,0,0,100,40);
+    g.drawImage(tremImage, 500, 240, 70,25,0,0,100,40);
     
    // g.drawImageAt(threshImage, 120, 235);
     g.drawImage(threshImage, 258, 240, 85,30,0,0,130,50);
@@ -212,37 +245,45 @@ void MonoPolySplitAudioProcessorEditor::timerCallback()
 void MonoPolySplitAudioProcessorEditor::sliderValueChanged(juce::Slider * slider)
 {
     
-    if (slider == &thresh){
-        audioProcessor.sta->setThresh(thresh.getValue());
+    if (slider == &threshSlider){
+        audioProcessor.threshold = threshSlider.getValue();
+        threshLabel.setText(juce::String(audioProcessor.threshold*100) + "  %", juce::dontSendNotification);
     }
     
     if (slider == &gainMono){
         audioProcessor.monoGain = gainMono.getValue();
+        gainMonoLabel.setText(juce::String((round((20*log10(audioProcessor.monoGain))*10))/10) + "  dB", juce::dontSendNotification);
     }
     
     if (slider == &gainPoly){
         audioProcessor.polyGain = gainPoly.getValue();
+        gainPolyLabel.setText(juce::String((float)(round((20*log10(audioProcessor.polyGain))*10))/10) + "  dB", juce::dontSendNotification);
     }
     
     if (slider == &distMono){
         audioProcessor.monoDist = distMono.getValue();
+        distMonoLabel.setText(juce::String((float)(round((20*log10(audioProcessor.monoDist))*10))/10) + "  dB", juce::dontSendNotification);
     }
     
-    if (slider == &gainPoly){
+    if (slider == &distPoly){
         audioProcessor.polyDist = distPoly.getValue();
+        distPolyLabel.setText(juce::String((float)(round((20*log10(audioProcessor.polyDist))*10))/10) + "  dB", juce::dontSendNotification);
     }
     
     if (slider == &tremMono){
         audioProcessor.monoTremRate = tremMono.getValue();
+        tremMonoLabel.setText(juce::String(audioProcessor.monoTremRate) + "  Hz", juce::dontSendNotification);
     }
     
     if (slider == &tremPoly){
         audioProcessor.polyTremRate = tremPoly.getValue();
+        tremPolyLabel.setText(juce::String(audioProcessor.polyTremRate) + "  Hz", juce::dontSendNotification);
     }
     
     if (slider == &releaseKnob){
         audioProcessor.releaseMS = releaseKnob.getValue();
         audioProcessor.releaseDec = floor((audioProcessor.releaseMS/1000)*audioProcessor.Fs);
+        releaseLabel.setText(juce::String(round(audioProcessor.releaseMS)) + "  ms", juce::dontSendNotification);
     }
 }
 

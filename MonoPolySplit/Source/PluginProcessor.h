@@ -62,7 +62,7 @@ public:
     float polyGain = 1.f;
     float monoDist = 1.f;
     float polyDist = 1.f;
-    float thresh = 0.f;
+    float threshold = 0.f;
     float attackMS = 0.f;
     float releaseMS = 0.f;
     
@@ -76,7 +76,7 @@ public:
     int monoTremTog = 0;
     double Fs;
     float releaseDec=0.f;
-    SigTypeAnalysis *sta;
+    SigTypeAnalysis sta;
     bool stateAn = true;
     
     juce::AudioProcessorValueTreeState state;
@@ -90,6 +90,8 @@ private:
     int count[2] = {0};
     Distortion polyDistortion;
     Distortion monoDistortion;
+    
+    
     
     Tremolo polyTremolo;
     Tremolo monoTremolo;

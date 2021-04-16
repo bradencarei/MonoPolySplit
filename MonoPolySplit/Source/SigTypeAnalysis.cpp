@@ -33,6 +33,7 @@ void SigTypeAnalysis::bufferPopulate(float sample, int channel){
     index[channel]++;
     
 }
+
 bool SigTypeAnalysis::checkSigType(int channel){
     int count = 0;
     arrayMax = 0;
@@ -40,8 +41,6 @@ bool SigTypeAnalysis::checkSigType(int channel){
     index[channel] = 0;
     for (auto i = 0; i < bufferSiz; ++i){
         pushNextSampleIntoFifo (analysisBuffer[channel][i]);
-        if(i==bufferSiz-1)
-            float a = 0;
         }
     fft.performFrequencyOnlyForwardTransform (fftData.data());
     for (auto p = 40; p < bufferSiz/3; ++p){
@@ -53,7 +52,7 @@ bool SigTypeAnalysis::checkSigType(int channel){
         
     }
         
-    threshCalc = arrayMax*(thresh);
+    threshCalc = arrayMax*(analysisThresh);
     nextFFTBlockReady = false;
     for(auto t = maxIndex; t<bufferSiz/3;t++)
     {
@@ -91,11 +90,11 @@ void SigTypeAnalysis::pushNextSampleIntoFifo (float sample) noexcept
 
 void SigTypeAnalysis::setThresh(float threshold)
 {
-    thresh = threshold;
+    analysisThresh = threshold;
 }
 float SigTypeAnalysis::getThresh()
 {
-    return thresh;
+    return analysisThresh;
 }
 
 

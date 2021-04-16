@@ -15,7 +15,7 @@
 //==============================================================================
 /**
 */
-class MonoPolySplitAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer, public juce::Slider::Listener, public juce::Button::Listener
+class MonoPolySplitAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer, public juce::Slider::Listener, public juce::Button::Listener 
 {
 public:
     MonoPolySplitAudioProcessorEditor (MonoPolySplitAudioProcessor&);
@@ -34,7 +34,7 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     MonoPolySplitAudioProcessor& audioProcessor;
-    juce::Slider thresh;
+    juce::Slider threshSlider;
     juce::Label  threshLabel;
     juce::Slider gainMono;
     juce::Label  gainMonoLabel;
