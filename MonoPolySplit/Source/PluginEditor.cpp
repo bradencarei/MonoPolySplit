@@ -88,13 +88,13 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     tremMono.setValue(audioProcessor.monoTremRate);
     tremMono.setRange(.1f, 10.f,0.1f);
     tremMono.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
-    addAndMakeVisible(tremMono);
+    //addAndMakeVisible(tremMono);
     tremMono.setLookAndFeel(&Knob);
     
     tremMonoLabel.setBounds(37, 330, 60, 20);
     tremMonoLabel.setText(juce::String(audioProcessor.monoTremRate) + "  Hz", juce::dontSendNotification);
     tremMonoLabel.setJustificationType(juce::Justification::right);
-    addAndMakeVisible(tremMonoLabel);
+   // addAndMakeVisible(tremMonoLabel);
     
     tremPoly.addListener(this);
     tremPoly.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
@@ -102,13 +102,13 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     tremPoly.setValue(audioProcessor.polyTremRate);
     tremPoly.setRange(.1f, 10.f,0.1f);
     tremPoly.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
-    addAndMakeVisible(tremPoly);
+    //addAndMakeVisible(tremPoly);
     tremPoly.setLookAndFeel(&Knob);
     
     tremPolyLabel.setBounds(512, 330, 60, 20);
     tremPolyLabel.setText(juce::String(audioProcessor.polyTremRate) + "  Hz", juce::dontSendNotification);
     tremPolyLabel.setJustificationType(juce::Justification::right);
-    addAndMakeVisible(tremPolyLabel);
+    //addAndMakeVisible(tremPolyLabel);
     
     threshSlider.addListener(this);
     //thresh.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
@@ -127,7 +127,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     //releaseKnob.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     releaseKnob.setBounds(175, 310, 200, 50);
     releaseKnob.setValue(audioProcessor.releaseMS);
-    releaseKnob.setRange(1, 2000, 1);
+    releaseKnob.setRange(10, 2000, 1);
     releaseKnob.setTextBoxStyle(juce::Slider::NoTextBox, false, 75, 25);
     addAndMakeVisible(releaseKnob);
     //releaseKnob.setLookAndFeel(&Knob);
@@ -143,7 +143,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     monoTremButton.setColour(0x1000100, juce::Colours::darkslategrey);
     monoTremButton.setColour(0x1000101, juce::Colours::dodgerblue.brighter(.6));
     monoTremButton.setToggleState(false, juce::dontSendNotification);
-    addAndMakeVisible(monoTremButton);
+    //addAndMakeVisible(monoTremButton);
     
     polyTremButton.addListener(this);
     polyTremButton.setBounds(450,258,50,20);
@@ -151,7 +151,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     polyTremButton.setColour(0x1000100, juce::Colours::darkslategrey);
     polyTremButton.setColour(0x1000101, juce::Colours::dodgerblue.brighter(.6));
     polyTremButton.setToggleState(false, juce::dontSendNotification);
-    addAndMakeVisible(polyTremButton);
+    //addAndMakeVisible(polyTremButton);
     
     sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"monoGain",gainMono));
     sliderAttachments.emplace_back(new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"polyGain",gainPoly));
@@ -221,8 +221,8 @@ void MonoPolySplitAudioProcessorEditor::paint (juce::Graphics& g)
     g.drawImage(clipImage, 32, 122, 75,30,0,0,100,50);
     g.drawImage(clipImage, 507, 122, 75,30,0,0,100,50);
     
-    g.drawImage(tremImage, 25, 240, 70,25,0,0,100,40);
-    g.drawImage(tremImage, 500, 240, 70,25,0,0,100,40);
+    //g.drawImage(tremImage, 25, 240, 70,25,0,0,100,40);
+    //g.drawImage(tremImage, 500, 240, 70,25,0,0,100,40);
     
    // g.drawImageAt(threshImage, 120, 235);
     g.drawImage(threshImage, 258, 240, 85,30,0,0,130,50);

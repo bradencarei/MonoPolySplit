@@ -78,6 +78,8 @@ public:
     float releaseDec=0.f;
     SigTypeAnalysis sta;
     bool stateAn = true;
+    bool outputState = true;
+    float caseMult = 0.f;
     
     juce::AudioProcessorValueTreeState state;
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

@@ -38,12 +38,12 @@ MonoPolySplitAudioProcessor::~MonoPolySplitAudioProcessor()
 juce::AudioProcessorValueTreeState::ParameterLayout MonoPolySplitAudioProcessor::createParameterLayout(){
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoGain","Monophonic Gain",0.f,2.f,1.f) );
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyGain","Polyphonic Gain",0.f,2.f,1.f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoGain","Monophonic Gain",0.f,4.f,1.f) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyGain","Polyphonic Gain",0.f,4.f,1.f) );
     params.push_back( std::make_unique<juce::AudioParameterFloat> ("monoDist","Monophonic Distortion",1.f,10.f,1.f) );
     params.push_back( std::make_unique<juce::AudioParameterFloat> ("polyDist","Polyphonic Distortion",1.f,10.f,1.f) );
     
-    params.push_back( std::make_unique<juce::AudioParameterFloat> ("release","Release",1,2000,1) );
+    params.push_back( std::make_unique<juce::AudioParameterFloat> ("release","Release",10,2000,1) );
     params.push_back( std::make_unique<juce::AudioParameterFloat> ("thresh","Threshold",0.f, 1.f,1.f) );
     params.push_back( std::make_unique<juce::AudioParameterFloat> ("tremMono","Mono Tremolo Rate",0.1f, 10.f,1.f) );
     params.push_back( std::make_unique<juce::AudioParameterFloat> ("tremPoly","Poly Tremolo Rate",0.1f, 10.f,1.f) );
@@ -214,19 +214,26 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
             }
             
             
-            if(stateAn != prevState)
+            if(stateAn != prevState && releaseDec==releaseFS)
             {
                 releaseDec = releaseDec - 1;
+                caseMult = 1;
+                outputState = prevState;
             }
             
             else if(releaseDec>0 && releaseDec < releaseFS)
             {
-                
                 releaseDec = releaseDec - 1;
+                if(stateAn != prevState)
+                    outputState = prevState;
+                else
+                    outputState = stateAn;
             }
             else
             {
                 releaseDec = releaseFS;
+                outputState = stateAn;
+                caseMult = 0;
             }
             
                 
@@ -242,23 +249,31 @@ void MonoPolySplitAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
                 xPoly = polyTremolo.processSample(xPoly);
             
              count[channel]++;
-            if(stateAn == true){
+            if(outputState == true){
                     arrowX = 100;
                     arrowY = 95;
-                float polyMult =((releaseFS-releaseDec)/releaseFS);
-                float monoMult =(releaseDec/releaseFS);
-                buffer.getWritePointer(channel)[n]= buffer.getWritePointer(channel)[n]= polyMult*xPoly + monoMult*xMono;
+                float fade = Fs/100;
+                if(releaseDec > fade){
+                    buffer.getWritePointer(channel)[n]= buffer.getWritePointer(channel)[n]= 0*xPoly + xMono;}
+                else{
+                    float polyMult =1-((fade-releaseDec)/fade);
+                    float monoMult =1-(releaseDec/fade);
+                    buffer.getWritePointer(channel)[n]= buffer.getWritePointer(channel)[n]= caseMult*polyMult*xPoly + monoMult*xMono;}
                 }
                 
             else{
                     arrowX = 300;
                     arrowY = 95;
-                float polyMult =(releaseDec/releaseFS);
-                float monoMult =((releaseFS-releaseDec)/releaseFS);
-                buffer.getWritePointer(channel)[n]= polyMult*xPoly + monoMult*xMono;
+                float fade = Fs/100;
+                if(releaseDec > fade){
+                    buffer.getWritePointer(channel)[n]= buffer.getWritePointer(channel)[n]= xPoly + 0*xMono;}
+                else{
+                float polyMult =1-(releaseDec/fade);
+                float monoMult =1-((fade-releaseDec)/fade);
+                    buffer.getWritePointer(channel)[n]= polyMult*xPoly + caseMult*monoMult*xMono;}
                 }
             
-            prevState = stateAn;
+            prevState = outputState;
             
         }
     }
