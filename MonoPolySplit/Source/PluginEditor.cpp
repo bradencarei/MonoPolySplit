@@ -105,7 +105,7 @@ MonoPolySplitAudioProcessorEditor::MonoPolySplitAudioProcessorEditor (MonoPolySp
     addAndMakeVisible(tremPoly);
     tremPoly.setLookAndFeel(&Knob);
     
-    tremPolyLabel.setBounds(37, 330, 60, 20);
+    tremPolyLabel.setBounds(512, 330, 60, 20);
     tremPolyLabel.setText(juce::String(audioProcessor.polyTremRate) + "  Hz", juce::dontSendNotification);
     tremPolyLabel.setJustificationType(juce::Justification::right);
     addAndMakeVisible(tremPolyLabel);
